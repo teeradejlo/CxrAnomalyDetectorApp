@@ -62,7 +62,6 @@ nav {
 	background-color: rgb(69, 127, 82);
 }
 
-
 .navbar-last-nav-link:after {
 	width: 0px;
 }

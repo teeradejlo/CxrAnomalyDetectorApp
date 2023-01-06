@@ -3,10 +3,10 @@ import '../assets/common-classes.css'
 </script>
 
 <template>
-	<div class="homeview-container">
-		<div class="homeview-panel-1">
+	<div class="homeview-container flexbox-center">
+		<div class="homeview-panel-1 flexbox-center">
 			<div>
-				<h1 data-text="Chest X-ray">Chest X-ray</h1>
+				<h1 data-text="Chest X-Ray">Chest X-Ray</h1>
 				<h1 data-text="Anomaly">Anomaly</h1>
 				<h1 data-text="Detector">Detector</h1>
 				<p>Developed with <a href="https://github.com/ultralytics/yolov5" target="_blank">YOLOv5</a></p>
@@ -23,16 +23,12 @@ import '../assets/common-classes.css'
 
 <style scoped>
 .homeview-container {
-	display: flex;
 	flex-grow: 1;
-	align-items: center;
-	justify-content: center;
 	flex-direction: column;
 }
 
 .homeview-panel-1 {
-	display: flex;
-	align-items: center;
+	width: 100%;
 	height: 400px;
 	text-align: right;
 }
@@ -71,7 +67,7 @@ import '../assets/common-classes.css'
 }
 
 .homeview-icon {
-	aspect-ratio: 1;
+	aspect-ratio: 1 / 1;
 	height: 75%;
 	border-radius: 50%;
 	box-shadow: 0 0 20px rgb(200, 200, 200);
