@@ -1,5 +1,41 @@
 <script setup>
 import '../assets/common-classes.css'
+import '../assets/common-keyframes.css'
+import { ref } from 'vue'
+
+//data
+const imgSrc = ref(null)
+
+//methods
+const uploadFile = () => {
+	console.log('upload')
+	document.getElementById('detectview-fileInput').click()
+}
+
+const selectFile = () => {
+	console.log('selected')
+	const selectedFile = document.getElementById('detectview-fileInput').files[0]
+	let pattern = /image-*/
+
+	if (!selectedFile.type.match(pattern)) {
+		console.log('invalid format')
+		return
+	}
+
+	console.log('valid format')
+	const reader = new FileReader()
+
+	reader.addEventListener("load", () => {
+		// convert image file to base64 string
+		imgSrc.value = reader.result
+	}, false)
+
+	reader.readAsDataURL(selectedFile)
+}
+
+const detectImage = () => {
+	console.log('detect')
+}
 </script>
 
 <script>
@@ -10,7 +46,23 @@ export default {
 
 <template>
 	<div class="detectview-container flexbox-center">
-
+		<div class="detectview-panel-1 d-flex">
+			<div class="detectview-uploadbox justify-content-center" :class="{ 'flexbox-center': imgSrc == null }">
+				<template v-if="imgSrc == null">
+					<p style="color: lightgrey; cursor: default;">Upload An Image</p>
+				</template>
+				<template v-else>
+					<img class="img-auto-resize" v-bind:src="imgSrc" />
+				</template>
+			</div>
+			<div class="detectview-btn-panel flexbox-center">
+				<form>
+					<input type="file" id="detectview-fileInput" style="display:none;" @change="selectFile()" />
+					<button class="btn btn-dim green-btn" @click.prevent="uploadFile()">Upload</button>
+					<button class="btn btn-dim blue-btn" @click.prevent="detectImage()">Detect</button>
+				</form>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -20,5 +72,40 @@ export default {
 	background-color: aliceblue;
 	overflow: hidden;
 	background-color: white;
+	animation: fade-in 1s ease 0s 1 normal backwards, translate-in-top 1s ease 0s 1 normal backwards;
+}
+
+.detectview-panel-1 {
+	padding: 30px;
+	border-radius: 30px;
+	background-color: white;
+	box-shadow: 0 0 50px rgb(184, 184, 184);
+	flex-direction: column;
+}
+
+.detectview-uploadbox {
+	border: dashed 2px black;
+	margin-bottom: 30px;
+	width: 440px;
+	height: 360px;
+	max-height: 60vh;
+	max-width: 70vw;
+	display: flex;
+}
+
+.detectview-btn-panel .btn {
+	margin: 0 20px;
+}
+
+.detectview-btn-panel .btn:first-child {
+	margin-left: 0;
+}
+
+.detectview-btn-panel .btn:last-child {
+	margin-right: 0;
+}
+
+.detectview-btn-panel button:active {
+	transform: translateY(2px);
 }
 </style>
