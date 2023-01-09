@@ -1,5 +1,12 @@
 <script setup>
 import '../assets/common-classes.css'
+import '../assets/common-keyframes.css'
+</script>
+
+<script>
+export default {
+	name: 'homeview',
+}
 </script>
 
 <template>
@@ -15,7 +22,9 @@ import '../assets/common-classes.css'
 		</div>
 		<div class="homeview-panel-2 flexbox-center">
 			<div>
-				<button class="btn btn-dim homeview-button">Try It Now!</button>
+				<button class="btn btn-dim homeview-button" @click="() => this.$router.push('/detect')">
+					Try It Now!
+				</button>
 			</div>
 		</div>
 	</div>
@@ -25,6 +34,8 @@ import '../assets/common-classes.css'
 .homeview-container {
 	flex-grow: 1;
 	flex-direction: column;
+	overflow: hidden;
+	background-color: white;
 }
 
 .homeview-panel-1 {
@@ -43,6 +54,15 @@ import '../assets/common-classes.css'
 	font-size: 4.5rem;
 	margin-top: 0;
 	margin-bottom: 0;
+	animation: fade-in 0.5s ease 0s 1 normal backwards, translate-in-top 0.5s ease 0s 1 normal backwards;
+}
+
+.homeview-panel-1 h1:nth-child(2) {
+	animation-delay: 0.25s;
+}
+
+.homeview-panel-1 h1:nth-child(3) {
+	animation-delay: 0.5s;
 }
 
 .homeview-panel-1 h1::after {
@@ -64,6 +84,7 @@ import '../assets/common-classes.css'
 	text-align: right;
 	font-size: 25px;
 	font-weight: 200;
+	animation: fade-in 0.5s ease 0.75s 1 normal backwards, translate-in-top 0.5s ease 0.75s 1 normal backwards;
 }
 
 .homeview-icon {
@@ -73,6 +94,7 @@ import '../assets/common-classes.css'
 	box-shadow: 0 0 20px rgb(200, 200, 200);
 	background-position: center;
 	background-size: 120%;
+	animation: fade-in 2s ease 0s 1 normal backwards;
 	background-image: url("https://media.istockphoto.com/id/920917304/vector/human-lungs-with-hand-holding-magnifying-glass-medical-tool-for-diagnosing-of-diseases-of.jpg?s=612x612&w=0&k=20&c=JFc0T6dXofa-v28yVPdb2Wymyp6UGezAREE9jfL1Dos=");
 }
 
@@ -85,10 +107,21 @@ import '../assets/common-classes.css'
 	padding: 15px 30px;
 	color: white;
 	background-color: rgb(78, 216, 106);
+	animation: fade-in 1s ease 0s 1 normal backwards, homeview-translate-in-right 1s ease 0s 1 normal backwards;
 }
 
 .homeview-button:active {
 	-webkit-transform: translateY(2px);
 	transform: translateY(2px);
+}
+
+@keyframes homeview-translate-in-right {
+	from {
+		transform: translateX(40px);
+	}
+
+	to {
+		transform: translateX(0px);
+	}
 }
 </style>

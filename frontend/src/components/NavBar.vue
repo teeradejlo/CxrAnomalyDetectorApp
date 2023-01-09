@@ -8,8 +8,8 @@ export default {
 	<nav>
 		<div class="navbar-nav-head">teeradejlo</div>
 		<div class="navbar-link-list">
-			<div class="navbar-nav-link">Home</div>
-			<div class="navbar-nav-link navbar-last-nav-link">Detect</div>
+			<div class="navbar-nav-link" @click="() => this.$router.push('/')">Home</div>
+			<div class="navbar-nav-link navbar-last-nav-link" @click="() => this.$router.push('/detect')">Detect</div>
 		</div>
 	</nav>
 </template>
@@ -20,6 +20,7 @@ nav {
 	background-color: rgb(206, 255, 216);
 	padding: 20px;
 	box-shadow: 0 1px 20px rgb(181, 181, 181);
+	z-index: 1;
 }
 
 .navbar-link-list {
