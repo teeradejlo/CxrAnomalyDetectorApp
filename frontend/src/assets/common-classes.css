@@ -40,3 +40,19 @@
 	filter: brightness(70%);
 	-webkit-filter: brightness(70%);
 }
+
+.img-auto-resize {
+	max-height: 100%;
+	max-width: 100%;
+	height: auto;
+}
+
+.green-btn {
+	color: white;
+	background-color: rgb(78, 216, 106);
+}
+
+.blue-btn {
+	color: white;
+	background-color: rgb(83, 106, 255);
+}
