@@ -47,6 +47,11 @@
 	height: auto;
 }
 
+.red-btn {
+	color: white;
+	background-color: rgb(235, 92, 92);
+}
+
 .green-btn {
 	color: white;
 	background-color: rgb(78, 216, 106);

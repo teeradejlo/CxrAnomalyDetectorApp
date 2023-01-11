@@ -1,13 +1,38 @@
 <script setup>
 import '../assets/common-classes.css'
 import '../assets/common-keyframes.css'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { axiosFastApi } from '../services/axios.js'
 
 //data
 const imgSrc = ref(null)
-const detectionDone = ref(false)
-const detectionStart = ref(false)
+const diagnosis = ref([])
+const detectionOngoing = ref(false)
+const detectionStarted = ref(false)
+
+//computed
+const diagnosisText = computed(() => {
+	if (diagnosis.value.length > 0) {
+		let diseaseDict = {}
+
+		diagnosis.value.forEach((val) => {
+			if (val[6] in diseaseDict) {
+				diseaseDict[val[6]] += 1
+			} else {
+				diseaseDict[val[6]] = 1
+			}
+		})
+
+		let retHTML = "<p><strong>Diagnosis:</strong></p>"
+
+		for (const [key, val] of Object.entries(diseaseDict)) {
+			retHTML += `<p>${val} ${val > 1 ? "risks" : "risk"} of ${key} detected.</p>`
+		}
+		return retHTML
+	} else {
+		return "<p><strong>Diagnosis:</strong></p><p>No risks detected.</p>"
+	}
+})
 
 //methods
 const uploadFile = () => {
@@ -36,26 +61,36 @@ const selectFile = () => {
 const detectImage = async () => {
 	if (imgSrc.value != null) {
 		imgSrc.value = null
-		detectionStart.value = true;
+		detectionOngoing.value = true
+		detectionStarted.value = true
 
-		let formData = new FormData();
+		let formData = new FormData()
 		const selectedFile = document.getElementById('detectview-fileInput').files[0]
 
 		if (selectedFile) {
-			formData.append("file", selectedFile);
+			formData.append("file", selectedFile)
 			await axiosFastApi.post('/detect', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 				.then((res) => {
 					imgSrc.value = `data:image/${res.data.image_format};base64,${res.data.image_b64}`
+					diagnosis.value = res.data.diagnosis
 				})
 				.catch((e) => {
 					console.log(e)
 				})
+			detectionOngoing.value = false
 		} else {
 			alert('Some errors occurred. Please try again.')
 		}
 	} else {
 		alert('Please upload an image...')
 	}
+}
+
+const reset = () => {
+	imgSrc.value = null
+	diagnosis.value = []
+	detectionOngoing.value = false
+	detectionStarted.value = false
 }
 </script>
 
@@ -67,27 +102,33 @@ export default {
 
 <template>
 	<div class="detectview-container flexbox-center">
-		<div v-if="!detectionStart" class="detectview-panel-1 d-flex">
-			<div class="detectview-uploadbox justify-content-center" :class="{ 'flexbox-center': imgSrc == null }">
-				<template v-if="imgSrc == null">
-					<p style="color: lightgrey; cursor: default;">Upload An Image</p>
-				</template>
-				<template v-else>
-					<img class="img-auto-resize" id="detectview-uploaded-img" v-bind:src="imgSrc" />
-				</template>
-			</div>
-			<div class="detectview-btn-panel flexbox-center">
-				<form>
-					<input type="file" id="detectview-fileInput" style="display:none;" @change="selectFile()" />
-					<button class="btn btn-dim green-btn" @click.prevent="uploadFile()">Upload</button>
-					<button class="btn btn-dim blue-btn" @click.prevent="detectImage()">Detect</button>
-				</form>
-			</div>
-		</div>
-		<div v-else class="detectview-panel-1 d-flex">
-			<div class="detectview-uploadbox justify-content-center" :class="{ 'flexbox-center': imgSrc == null }">
-				<img class="img-auto-resize" v-bind:src="imgSrc" />
-			</div>
+		<div class="detectview-panel-1 d-flex">
+			<template v-if="!detectionOngoing">
+				<div class="detectview-uploadbox justify-content-center" :class="{ 'flexbox-center': imgSrc == null }">
+					<template v-if="imgSrc == null">
+						<p style="color: lightgrey; cursor: default;">Upload An Image</p>
+					</template>
+					<template v-else>
+						<img class="img-auto-resize" id="detectview-uploaded-img" :src="imgSrc" />
+					</template>
+				</div>
+				<div v-if="!detectionStarted" class="detectview-btn-panel flexbox-center">
+					<form>
+						<input type="file" id="detectview-fileInput" style="display:none;" @change="selectFile()" />
+						<button class="btn btn-dim green-btn" @click.prevent="uploadFile()">Upload</button>
+						<button class="btn btn-dim blue-btn" @click.prevent="detectImage()">Detect</button>
+					</form>
+				</div>
+				<div v-else>
+					<div v-html="diagnosisText"></div>
+					<div class="detectview-btn-panel flexbox-center" style="margin-top: 20px;">
+						<button class="btn btn-dim red-btn" @click="reset()">Back</button>
+					</div>
+				</div>
+			</template>
+			<template v-else>
+
+			</template>
 		</div>
 	</div>
 </template>
@@ -108,16 +149,17 @@ export default {
 	padding: 30px;
 	max-width: 80%;
 	max-height: 80%;
-	width: 550px;
 }
 
 .detectview-uploadbox {
 	display: flex;
 	border: dashed 2px black;
 	border-radius: 15px;
-	margin-bottom: 30px;
-	height: 350px;
-	width: 100%;
+	margin-bottom: 20px;
+	max-height: 100%;
+	max-width: 100%;
+	height: 250px;
+	width: 400px;
 }
 
 .detectview-btn-panel button {
