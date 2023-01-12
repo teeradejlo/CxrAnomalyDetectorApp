@@ -3,6 +3,7 @@ import '../assets/common-classes.css'
 import '../assets/common-keyframes.css'
 import { ref, computed } from 'vue'
 import { axiosFastApi } from '../services/axios.js'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
 //data
 const imgSrc = ref(null)
@@ -76,6 +77,8 @@ const detectImage = async () => {
 				})
 				.catch((e) => {
 					console.log(e)
+					alert('Some errors occurred. Please try again.')
+					detectionStarted.value = false
 				})
 			detectionOngoing.value = false
 		} else {
@@ -127,7 +130,7 @@ export default {
 				</div>
 			</template>
 			<template v-else>
-
+				<PulseLoader :loading="true"></PulseLoader>
 			</template>
 		</div>
 	</div>
@@ -158,8 +161,8 @@ export default {
 	margin-bottom: 20px;
 	max-height: 100%;
 	max-width: 100%;
-	height: 250px;
-	width: 400px;
+	height: 300px;
+	width: 450px;
 }
 
 .detectview-btn-panel button {
